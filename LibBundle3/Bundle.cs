@@ -188,13 +188,19 @@ namespace LibBundle3 {
 				record.UncompressedSize = header.uncompressed_size;
 		}
 
-		public virtual void Dispose() {
+		public virtual void Dispose()
+		{
 			GC.SuppressFinalize(this);
 			RemoveCache();
 			if (record != null)
 				record._Bundle = null;
 			if (!streamLeaveOpen)
-				baseStream.Close();
+			{
+				if (baseStream != null)
+				{
+					baseStream.Close();
+				}
+			}
 		}
 
 		~Bundle() {
