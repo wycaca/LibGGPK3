@@ -500,7 +500,7 @@ namespace LibBundle3 {
 		/// Patch with a zip file and ignore its files that couldn't be found
 		/// </summary>
 		public virtual void Replace(IEnumerable<ZipArchiveEntry> zipEntries) {
-			var maxSize = 209715200; //200MB
+			var maxSize = 600 * 1024 * 1024; // 600 MB
 			var br = GetSmallestBundle();
 			while (br.Bundle.UncompressedSize >= maxSize)
 				maxSize *= 2;

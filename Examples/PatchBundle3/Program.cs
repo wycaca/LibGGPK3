@@ -7,6 +7,7 @@ namespace PatchBundle3 {
 	public class Program {
 		public static void Main(string[] args) {
             var zipPath = "patch.zip";
+            ZipArchive zip = null;
             try
             {
 				var version = Assembly.GetExecutingAssembly().GetName().Version!;
@@ -50,14 +51,13 @@ namespace PatchBundle3 {
 				Console.WriteLine("读取 index file . . .");
 				var index = new LibBundle3.Index(args[0], false);
 				Console.WriteLine("创建压缩文件...");
-				ZipFile.CreateFromDirectory(args[1], zipPath);
-
-				Console.WriteLine("替换文件中 . . .");
-				var zip = ZipFile.OpenRead(zipPath);
+				ZipFile.CreateFromDirectory(args[1], zipPath, CompressionLevel.Fastest, false);
+                Console.WriteLine("创建压缩文件完成");
+                Console.WriteLine("替换文件中 . . .");
+				zip = ZipFile.OpenRead(zipPath);
 
 				index.Replace(zip.Entries);
 				index.Dispose();
-				zip.Dispose();
                 Console.WriteLine("文件替换成功!");
 			}
 			catch (Exception e)
@@ -66,12 +66,13 @@ namespace PatchBundle3 {
 				Console.Error.WriteLine(e);
 			}
 			finally {
+				if (zip != null) {
+                    zip.Dispose();
+                }
                 Console.WriteLine("清理压缩文件...");
                 File.Delete(zipPath);
             }
-            Console.WriteLine();
-			Console.WriteLine("Enter to exit . . .");
-			Console.ReadLine();
+			Console.WriteLine("完成");
 		}
 	}
 }
